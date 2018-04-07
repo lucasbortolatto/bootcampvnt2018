@@ -10,6 +10,8 @@ export class ShoppingListComponent implements OnInit {
 
   public listItems: Array<any>;
 
+  private itemToAdd: string = '';
+
   constructor(
     private myShoppingListService: ShoppingListService
   ) {
@@ -19,6 +21,18 @@ export class ShoppingListComponent implements OnInit {
    }
 
   ngOnInit() {
+  }
+
+  private addObjectToList() {
+    let newItem = {
+      name: this.itemToAdd,
+      diabled: false
+    };
+
+    this.myShoppingListService.add(newItem);
+    this.itemToAdd = '';
+
+
   }
 
 }
