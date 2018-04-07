@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
+import { Observable } from 'rxjs/Observable';
+
 
 @Injectable()
 export class ShoppingListService {
 
   public listItems: Array<any>;
 
-  constructor() {
+  constructor( private httpClient: HttpClient) {
     this.listItems = [{
       name: 'Bread',
       disabled: false
@@ -25,22 +29,26 @@ export class ShoppingListService {
       ];
    }
 
-   public  findAll(): Array<any> {
-     return this.listItems;
+   public  findAll(): Observable<Object> {
+    return this.httpClient
+    .get(`${environment.firebase.databaseURL}/items.json`);
+  }
+
+    public add(item): Observable<Object> {
+     return this.httpClient.post(`${environment.firebase.databaseURL}/items.json`, item);
    }
 
-   public add(item) {
-     this.listItems.unshift(item);
+   public remove(item): Observable<Object> {
+     return this.httpClient.delete(
+      `${environment.firebase.databaseURL}/items/${item.key}.json`);
    }
 
-   public remove(item) {
-     let index = this.listItems.indexOf(item);
-     this.listItems.splice(index, 1);
-   }
-
-   public cross(item) {
-     let index = this.listItems.indexOf(item);
-     this.listItems[index].disabled = true;
+   public edit(item): Observable<Object> {
+     let key = item.key;
+     delete item.key;
+     return this.httpClient.patch(
+     `${environment.firebase.databaseURL}/items/${key}.json`,
+     item);
    }
 
 

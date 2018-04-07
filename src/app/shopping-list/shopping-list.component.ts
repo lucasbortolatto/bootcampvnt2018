@@ -10,13 +10,26 @@ export class ShoppingListComponent implements OnInit {
 
   public listItems: Array<any>;
 
-  private itemToAdd: string = '';
+  private itemToAdd: any;
 
   constructor(
     private myShoppingListService: ShoppingListService
   ) {
 
-    this.listItems = this.myShoppingListService.findAll();
+    this.myShoppingListService.findAll().subscribe(
+      response => {
+        if (response) {
+          this.listItems = Object.keys(response).map(id => {
+            let item: any = response[id];
+            item.key = id;
+          return item;
+        })
+        } else {
+        this.listItems = [];
+      }
+      },
+      error => { console.error(error) }
+    )
 
    }
 
@@ -26,11 +39,16 @@ export class ShoppingListComponent implements OnInit {
   private addObjectToList() {
     let newItem = {
       name: this.itemToAdd,
-      diabled: false
+      disabled: false
     };
 
-    this.myShoppingListService.add(newItem);
-    this.itemToAdd = '';
+    this.myShoppingListService.add(newItem).subscribe(
+      response => {
+        newItem['key'] = response['name'];
+        this.listItems.unshift(newItem);
+      },
+        error => { console.error('Deu erro')} );
+        this.itemToAdd = '';
 
 
   }

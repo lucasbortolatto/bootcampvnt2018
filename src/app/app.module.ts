@@ -12,6 +12,8 @@ import { ShoppingListItemComponent } from './shopping-list/shopping-list-item/sh
 import { ShoppingListService } from './shopping-list.service';
 import { AboutComponent } from './about/about.component';
 import { AuthService } from './auth.service';
+import { HttpClientModule } from '@angular/common/http';
+
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { AuthService } from './auth.service';
   imports: [
     BrowserModule,
     FormsModule,
+    HttpClientModule,
     RouterModule.forRoot(APP_ROUTES)
+
   ],
   providers: [
     ShoppingListService,
