@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ShoppingListService } from '../shopping-list.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-shopping-list',
@@ -8,32 +9,14 @@ import { ShoppingListService } from '../shopping-list.service';
 })
 export class ShoppingListComponent implements OnInit {
 
-  public listItems: Array<any>;
+  public listItems: Observable<any[]>;
 
-  private itemToAdd: any;
+  private itemToAdd: string ='';
 
-  constructor(
-    private myShoppingListService: ShoppingListService
-  ) {
-
-    this.myShoppingListService.findAll().subscribe(
-      response => {
-        if (response) {
-          this.listItems = Object.keys(response).map(id => {
-            let item: any = response[id];
-            item.key = id;
-          return item;
-        })
-        } else {
-        this.listItems = [];
-      }
-      },
-      error => { console.error(error) }
-    )
-
-   }
+  constructor(private myShoppingListService: ShoppingListService) {}
 
   ngOnInit() {
+    this.listItems = this.myShoppingListService.listItemFirebase;
   }
 
   private addObjectToList() {
@@ -42,14 +25,9 @@ export class ShoppingListComponent implements OnInit {
       disabled: false
     };
 
-    this.myShoppingListService.add(newItem).subscribe(
-      response => {
-        newItem['key'] = response['name'];
-        this.listItems.unshift(newItem);
-      },
-        error => { console.error('Deu erro')} );
-        this.itemToAdd = '';
+    this.myShoppingListService.add(newItem);
 
+    this.itemToAdd = '';
 
   }
 

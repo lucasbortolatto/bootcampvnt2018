@@ -20,27 +20,16 @@ export class ShoppingListItemComponent implements OnInit {
   }
 
   public removeItem() {
-    this.myShoppingListService.remove(this.listItem).subscribe(
-      res => {
-        console.log("Item foi excluido");
-        this.deleted = true;
-
-      }
-    );
+    this.myShoppingListService.remove(this.listItem);
   }
 
   public crossItem() {
     let itemEdited = {
-      key: this.listItem.key
+      key: this.listItem.key,
       disabled: true
     };
 
-    this.myShoppingListService.edit(itemEdited).subscribe(
-      res => {
-        console.log("Item Editado");
-        this.listItem.disabled = true;
-      }
-    )
+    this.myShoppingListService.edit(itemEdited);
   }
 
 
